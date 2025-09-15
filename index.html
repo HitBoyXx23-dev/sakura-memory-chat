@@ -10,7 +10,12 @@
     <aside id="sidebar">
       <h2>🌸 Sakura AI</h2>
       <button onclick="newChat()">+ New Chat</button>
+
+      <h3>💬 Past Chats</h3>
       <div id="chatList"></div>
+
+      <h3>📝 Keywords</h3>
+      <div id="keywordList"></div>
 
       <hr>
       <h3>⚙️ Settings</h3>
@@ -28,10 +33,6 @@
       <button class="danger" onclick="clearAll()">Clear All</button>
 
       <hr>
-      <h3>📝 Keywords</h3>
-      <div id="keywordList"></div>
-
-      <hr>
       <h3>🎨 Theme</h3>
       <button onclick="toggleTheme()">Toggle Dark/Light</button>
     </aside>
@@ -47,13 +48,6 @@
         <button onclick="sendMessage()">➤</button>
       </div>
     </main>
-  </div>
-
-  <!-- Context menu -->
-  <div id="contextMenu">
-    <button onclick="contextRename()">✏️ Rename</button>
-    <button onclick="contextDuplicate()">📄 Duplicate</button>
-    <button onclick="contextDelete()" class="danger">🗑️ Delete</button>
   </div>
 
   <script src="script.js"></script>
