@@ -116,7 +116,7 @@ function getKeywordAnswer(text, chat) {
     let key = text.toLowerCase().trim();
     if (chat.keywords[key]) return chat.keywords[key];
     for (let k in chat.keywords) if (key.includes(k)) return chat.keywords[k];
-    return `${botPrompt} I don't know that yet. Teach me with "remember keyword <keyword> = <answer>".`;
+    return `${botPrompt} I don't know that yet. Teach me with "remember keyword  <keyword> = <answer>".`;
 }
 
 // ------------------- Settings -------------------
