@@ -2,11 +2,10 @@ let chatBox = document.getElementById("chat");
 let chatTitle = document.getElementById("chatTitle");
 let userInput = document.getElementById("userInput");
 let chatListDiv = document.getElementById("chatList");
-let contextMenu = document.getElementById("contextMenu");
+let keywordListDiv = document.getElementById("keywordList");
 
 let chats = JSON.parse(localStorage.getItem("chats") || "[]");
 let currentChatIndex = parseInt(localStorage.getItem("currentChatIndex") || -1);
-let contextChatIndex = null;
 let botPrompt = localStorage.getItem("botPrompt") || "I am your Sakura AI 🌸.";
 
 // ------------------- Rendering -------------------
@@ -31,19 +30,12 @@ function renderChatList() {
         div.className = "chatItem" + (i === currentChatIndex ? " active" : "");
         div.textContent = chat.title || "Untitled Chat";
         div.onclick = () => loadChat(i);
-        div.oncontextmenu = e => {
-            e.preventDefault();
-            contextChatIndex = i;
-            showContextMenu(e.pageX, e.pageY);
-        };
         chatListDiv.appendChild(div);
     });
 }
 
-// ------------------- Keywords -------------------
 function renderKeywords() {
-    let keywordDiv = document.getElementById("keywordList");
-    keywordDiv.innerHTML = "";
+    keywordListDiv.innerHTML = "";
     if (currentChatIndex === -1) return;
     let chat = chats[currentChatIndex];
     if (!chat.keywords) chat.keywords = {};
@@ -52,7 +44,7 @@ function renderKeywords() {
         div.className = "keywordItem";
         div.innerHTML = `<strong>${key}</strong> → ${chat.keywords[key].replace(/\n/g,"<br>")}`;
         div.onclick = () => { userInput.value = key; sendMessage(); };
-        keywordDiv.appendChild(div);
+        keywordListDiv.appendChild(div);
     }
 }
 
@@ -65,17 +57,12 @@ function saveAll() {
 function newChat() {
     chats.push({ title: "New Chat", messages: [], keywords: {} });
     currentChatIndex = chats.length - 1;
-    saveAll();
-    renderChatList();
-    renderChat();
-    chatTitle.textContent = "New Chat";
+    saveAll(); renderChatList(); renderChat(); chatTitle.textContent="New Chat";
 }
 
 function loadChat(index) {
     currentChatIndex = index;
-    saveAll();
-    renderChatList();
-    renderChat();
+    saveAll(); renderChatList(); renderChat();
     chatTitle.textContent = chats[index].title;
 }
 
@@ -117,12 +104,9 @@ function getKeywordAnswer(text, chat) {
     if (chat.keywords[key]) return chat.keywords[key];
     for (let k in chat.keywords) if (key.includes(k)) return chat.keywords[k];
 
-    // Friendly instruction if nothing is memorized
     if (Object.keys(chat.keywords).length === 0) {
         return `${botPrompt} I don't know anything yet! 🌸\nYou can teach me using this format:\nremember keyword [your question] = [your answer]`;
     }
-
-    // Instruction if some keywords exist but input doesn't match
     return `${botPrompt} I don't know this yet. 🌸\nYou can teach me using the format:\nremember keyword [your question] = [your answer]`;
 }
 
@@ -157,10 +141,7 @@ function deleteMemory() {
     let keyword = document.getElementById("deleteInput").value.trim();
     if (!keyword || currentChatIndex === -1) return;
     let chat = chats[currentChatIndex];
-    if (chat.keywords[keyword.toLowerCase()]) {
-        delete chat.keywords[keyword.toLowerCase()]; saveAll(); renderKeywords();
-        alert(`Deleted keyword: "${keyword}"`); return;
-    }
+    if (chat.keywords[keyword.toLowerCase()]) { delete chat.keywords[keyword.toLowerCase()]; saveAll(); renderKeywords(); alert(`Deleted keyword: "${keyword}"`); return; }
     let idx = chat.messages.findIndex(m => m.text.toLowerCase() === keyword.toLowerCase());
     if (idx !== -1) { chat.messages.splice(idx,1); saveAll(); renderChat(); alert(`Deleted message: "${keyword}"`);} 
     else { alert("No exact match found."); }
@@ -170,13 +151,5 @@ function clearAll() { if (confirm("Clear ALL chats?")) { chats=[]; currentChatIn
 function renameChat() { if (currentChatIndex===-1) return; let newName = prompt("Enter new chat name:", chats[currentChatIndex].title); if (newName && newName.trim()!=="") { chats[currentChatIndex].title=newName.trim(); chatTitle.textContent=newName.trim(); saveAll(); renderChatList(); } }
 function toggleTheme() { document.body.classList.toggle("light"); }
 
-// ------------------- Context Menu -------------------
-function showContextMenu(x,y){ contextMenu.style.display="block"; contextMenu.style.left=x+"px"; contextMenu.style.top=y+"px"; }
-function hideContextMenu(){ contextMenu.style.display="none"; contextChatIndex=null; }
-function contextRename(){ if(contextChatIndex===null)return; let newName=prompt("Rename chat:", chats[contextChatIndex].title); if(newName&&newName.trim()!==""){ chats[contextChatIndex].title=newName.trim(); if(contextChatIndex===currentChatIndex)chatTitle.textContent=newName.trim(); saveAll(); renderChatList(); } hideContextMenu(); }
-function contextDelete(){ if(contextChatIndex===null)return; if(confirm("Delete this chat?")){ chats.splice(contextChatIndex,1); if(currentChatIndex===contextChatIndex) currentChatIndex=chats.length?0:-1; saveAll(); renderChatList(); renderChat(); } hideContextMenu(); }
-function contextDuplicate(){ if(contextChatIndex===null)return; let original=chats[contextChatIndex]; let copy={ title: original.title+" (copy)", messages: JSON.parse(JSON.stringify(original.messages)), keywords:{...original.keywords} }; chats.push(copy); saveAll(); renderChatList(); hideContextMenu(); }
-
 // ------------------- Init -------------------
 if(chats.length===0)newChat(); else { renderChatList(); renderChat(); loadChat(currentChatIndex); }
-document.body.addEventListener("click", hideContextMenu);
