@@ -13,6 +13,17 @@
       <h2>🌸 Sakura AI</h2>
       <button type="button" onclick="newChat()" class="primary">+ New Chat</button>
 
+      <!-- Search -->
+      <section>
+        <h3>🔍 Search</h3>
+        <input 
+          type="text" 
+          id="searchInput" 
+          placeholder="Search chats or keywords..."
+          oninput="searchMemory()"
+        >
+      </section>
+
       <!-- Past Chats -->
       <section>
         <h3>💬 Past Chats</h3>
@@ -28,8 +39,18 @@
       <!-- Settings -->
       <section>
         <h3>⚙️ Settings</h3>
-        <label for="promptInput">Bot Prompt</label>
-        <input type="text" id="promptInput" placeholder="Set bot personality...">
+
+        <label for="promptSelect">Choose Personality</label>
+        <select id="promptSelect" onchange="setPromptFromDropdown()">
+          <option value="I am your Sakura AI 🌸.">🌸 Default (Sweet)</option>
+          <option value="I am your cute and playful Sakura AI, always cheerful 🌸.">💖 Cute</option>
+          <option value="I am your flirty and kinky Sakura AI 🌸.">🔥 Kinky</option>
+          <option value="I am your calm and serious Sakura AI 🌸.">📘 Serious</option>
+          <option value="I am your supportive and caring Sakura AI 🌸.">🤗 Caring</option>
+        </select>
+
+        <label for="promptInput">Or Write Custom Prompt</label>
+        <input type="text" id="promptInput" placeholder="Set custom personality...">
         <button type="button" onclick="setPrompt()">Save Prompt</button>
       </section>
 
