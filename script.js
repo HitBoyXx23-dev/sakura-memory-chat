@@ -116,7 +116,14 @@ function getKeywordAnswer(text, chat) {
     let key = text.toLowerCase().trim();
     if (chat.keywords[key]) return chat.keywords[key];
     for (let k in chat.keywords) if (key.includes(k)) return chat.keywords[k];
-    return `${botPrompt} I don't know that yet. Teach me with "remember keyword  KEYWORD = ANSWER".`;
+
+    // Friendly instruction if nothing is memorized
+    if (Object.keys(chat.keywords).length === 0) {
+        return `${botPrompt} I don't know anything yet! 🌸\nYou can teach me using this format:\nremember keyword [your question] = [your answer]`;
+    }
+
+    // Instruction if some keywords exist but input doesn't match
+    return `${botPrompt} I don't know this yet. 🌸\nYou can teach me using the format:\nremember keyword [your question] = [your answer]`;
 }
 
 // ------------------- Settings -------------------
@@ -150,7 +157,10 @@ function deleteMemory() {
     let keyword = document.getElementById("deleteInput").value.trim();
     if (!keyword || currentChatIndex === -1) return;
     let chat = chats[currentChatIndex];
-    if (chat.keywords[keyword.toLowerCase()]) { delete chat.keywords[keyword.toLowerCase()]; saveAll(); renderKeywords(); alert(`Deleted keyword: "${keyword}"`); return; }
+    if (chat.keywords[keyword.toLowerCase()]) {
+        delete chat.keywords[keyword.toLowerCase()]; saveAll(); renderKeywords();
+        alert(`Deleted keyword: "${keyword}"`); return;
+    }
     let idx = chat.messages.findIndex(m => m.text.toLowerCase() === keyword.toLowerCase());
     if (idx !== -1) { chat.messages.splice(idx,1); saveAll(); renderChat(); alert(`Deleted message: "${keyword}"`);} 
     else { alert("No exact match found."); }
