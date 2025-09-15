@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Sakura Memory Chat</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app">
+    <aside id="sidebar">
+      <h2>🌸 Sakura AI</h2>
+      <button onclick="newChat()">+ New Chat</button>
+      <div id="chatList"></div>
+
+      <hr>
+      <h3>⚙️ Settings</h3>
+      <label>Bot Prompt</label>
+      <input type="text" id="promptInput" placeholder="Set bot personality...">
+      <button onclick="setPrompt()">Save Prompt</button>
+
+      <hr>
+      <h3>📦 Memory</h3>
+      <button onclick="exportMemory()">Export</button>
+      <input type="file" id="importFile" style="display:none" onchange="importMemory(event)">
+      <button onclick="document.getElementById('importFile').click()">Import</button>
+      <input type="text" id="deleteInput" placeholder="Delete exact message">
+      <button onclick="deleteMemory()">Delete</button>
+      <button class="danger" onclick="clearAll()">Clear All</button>
+
+      <hr>
+      <h3>🎨 Theme</h3>
+      <button onclick="toggleTheme()">Toggle Dark/Light</button>
+    </aside>
+
+    <main id="chatArea">
+      <header>
+        <h1 id="chatTitle">New Chat</h1>
+        <button id="renameBtn" onclick="renameChat()">✏️ Rename</button>
+      </header>
+      <div id="chat"></div>
+      <div id="inputBox">
+        <input type="text" id="userInput" placeholder="Type your message...">
+        <button onclick="sendMessage()">➤</button>
+      </div>
+    </main>
+  </div>
+
+  <!-- Context menu -->
+  <div id="contextMenu">
+    <button onclick="contextRename()">✏️ Rename</button>
+    <button onclick="contextDuplicate()">📄 Duplicate</button>
+    <button onclick="contextDelete()" class="danger">🗑️ Delete</button>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
