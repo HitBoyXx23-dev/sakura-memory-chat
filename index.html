@@ -23,9 +23,13 @@
       <button onclick="exportMemory()">Export</button>
       <input type="file" id="importFile" style="display:none" onchange="importMemory(event)">
       <button onclick="document.getElementById('importFile').click()">Import</button>
-      <input type="text" id="deleteInput" placeholder="Delete exact message">
+      <input type="text" id="deleteInput" placeholder="Delete exact message or keyword">
       <button onclick="deleteMemory()">Delete</button>
       <button class="danger" onclick="clearAll()">Clear All</button>
+
+      <hr>
+      <h3>📝 Keywords</h3>
+      <div id="keywordList"></div>
 
       <hr>
       <h3>🎨 Theme</h3>
